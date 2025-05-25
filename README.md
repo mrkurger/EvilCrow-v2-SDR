@@ -159,3 +159,31 @@ Improvements and features developed here are intended to be contributed back to 
 3. **Real Data**: Reads actual RF data from CC1101 FIFO
 4. **Stable Communication**: Proper SPI handling and timing
 5. **Hardware Compatibility**: Works with actual EvilCrow hardware
+
+## 🤝 **Contributing to Original Project**
+
+This enhanced SDR functionality is designed to be contributed back to the original EvilCrow project:
+
+### **How to Contribute Back:**
+
+1. **Fork the original**: https://github.com/joelsernamoreno/EvilCrowRF-V2
+2. **Create feature branch**: `git checkout -b feature/enhanced-sdr`
+3. **Copy improvements** from this repo
+4. **Submit Pull Request** to original project
+5. **Help the community** benefit from these enhancements
+
+### **What Can Be Contributed:**
+
+- ✅ **SDR firmware improvements**
+- ✅ **URH integration bridge**
+- ✅ **Python SDK library**
+- ✅ **GNU Radio examples**
+- ✅ **Documentation enhancements**
+
+### **Collaboration Links:**
+
+- **Original Project**: https://github.com/joelsernamoreno/EvilCrowRF-V2
+- **This Enhanced Version**: https://github.com/mrkurger/EvilCrow-v2-SDR
+- **Main Development Fork**: https://github.com/mrkurger/EvilCrowRF-V2
+
+**Together we can make EvilCrow RF v2 the best open-source RF security platform!** 🚀

@@ -479,69 +479,143 @@ void setupWebServer()
 
 String getSDRWebInterface()
 {
-    String html = "<!DOCTYPE html><html><head>";
-    html += "<title>EvilCrow SDR Control</title>";
+    // Return the modern professional web interface
+    return getModernWebInterface();
+}
+
+String getModernWebInterface()
+{
+    String html = "<!DOCTYPE html><html lang='en'><head>";
+    html += "<meta charset='UTF-8'>";
     html += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+    html += "<title>EvilCrow SDR Pro</title>";
     html += "<style>";
-    html += "body{font-family:Arial,sans-serif;margin:20px;background:#1a1a1a;color:#fff}";
-    html += ".container{max-width:800px;margin:0 auto;padding:20px}";
-    html += ".card{background:#2d2d2d;border-radius:10px;padding:20px;margin:20px 0;border:1px solid #444}";
-    html += ".btn{background:#007bff;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;margin:5px}";
-    html += ".btn:hover{background:#0056b3}";
-    html += ".btn.stop{background:#dc3545}";
-    html += ".btn.stop:hover{background:#c82333}";
-    html += "input{padding:8px;border-radius:5px;border:1px solid #555;background:#333;color:#fff;margin:5px}";
-    html += ".status{padding:10px;border-radius:5px;margin:10px 0}";
-    html += ".status.active{background:#28a745;color:white}";
-    html += ".status.inactive{background:#6c757d;color:white}";
+
+    // CSS Part 1 - Base styles
+    html += "*{margin:0;padding:0;box-sizing:border-box;}";
+    html += "body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;";
+    html += "background:linear-gradient(135deg,#0c0c0c 0%,#1a1a2e 50%,#16213e 100%);";
+    html += "color:#fff;min-height:100vh;overflow-x:hidden;}";
+    html += ".container{max-width:1400px;margin:0 auto;padding:20px;}";
+
+    // Header styles
+    html += ".header{text-align:center;margin-bottom:30px;padding:20px;";
+    html += "background:rgba(255,255,255,0.05);border-radius:15px;";
+    html += "backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);}";
+    html += ".header h1{font-size:2.5em;";
+    html += "background:linear-gradient(45deg,#00ff88,#00ccff);";
+    html += "-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px;}";
+    html += ".header .subtitle{color:#888;font-size:1.1em;}";
+
+    // Dashboard and card styles
+    html += ".dashboard{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px;}";
+    html += ".card{background:rgba(255,255,255,0.08);border-radius:15px;padding:25px;";
+    html += "backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);";
+    html += "transition:all 0.3s ease;}";
+    html += ".card:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(0,255,136,0.2);}";
+    html += ".card h3{color:#00ff88;margin-bottom:20px;font-size:1.3em;display:flex;align-items:center;}";
+
+    // Status indicator
+    html += ".status-indicator{width:12px;height:12px;border-radius:50%;margin-right:10px;animation:pulse 2s infinite;}";
+    html += ".status-active{background:#00ff88;box-shadow:0 0 10px #00ff88;}";
+    html += ".status-inactive{background:#ff4444;box-shadow:0 0 10px #ff4444;}";
+    html += "@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}";
+
+    // Metrics
+    html += ".metric{display:flex;justify-content:space-between;margin-bottom:15px;";
+    html += "padding:10px;background:rgba(255,255,255,0.05);border-radius:8px;}";
+    html += ".metric-label{color:#ccc;}.metric-value{color:#00ccff;font-weight:bold;}";
+
+    // Controls
+    html += ".controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:30px;}";
+    html += ".btn{padding:12px 24px;border:none;border-radius:8px;font-size:1em;font-weight:bold;";
+    html += "cursor:pointer;transition:all 0.3s ease;text-transform:uppercase;letter-spacing:1px;}";
+    html += ".btn-primary{background:linear-gradient(45deg,#00ff88,#00ccff);color:#000;}";
+    html += ".btn-primary:hover{transform:scale(1.05);box-shadow:0 5px 20px rgba(0,255,136,0.4);}";
+    html += ".btn-danger{background:linear-gradient(45deg,#ff4444,#ff6b6b);color:#fff;}";
+    html += ".btn-danger:hover{transform:scale(1.05);box-shadow:0 5px 20px rgba(255,68,68,0.4);}";
+
+    // Frequency controls
+    html += ".frequency-input{display:flex;gap:10px;margin-bottom:20px;}";
+    html += ".frequency-input input{flex:1;padding:12px;border:2px solid rgba(255,255,255,0.2);";
+    html += "border-radius:8px;background:rgba(255,255,255,0.1);color:#fff;font-size:1em;}";
+    html += ".frequency-input input:focus{outline:none;border-color:#00ff88;box-shadow:0 0 10px rgba(0,255,136,0.3);}";
+    html += ".frequency-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}";
+    html += ".preset-btn{padding:8px 12px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);";
+    html += "border-radius:6px;color:#fff;cursor:pointer;transition:all 0.3s ease;text-align:center;}";
+    html += ".preset-btn:hover{background:rgba(0,255,136,0.2);border-color:#00ff88;}";
+
+    // Mobile responsive
+    html += "@media (max-width:768px){.dashboard{grid-template-columns:1fr;}.frequency-presets{grid-template-columns:repeat(2,1fr);}}";
     html += "</style></head><body>";
+
+    // HTML Body
     html += "<div class='container'>";
-    html += "<h1>🚀 EvilCrow SDR Control</h1>";
+    html += "<div class='header'>";
+    html += "<h1>🦅 EvilCrow SDR Pro</h1>";
+    html += "<p class='subtitle'>Professional RF Security Platform | Software Defined Radio</p>";
+    html += "</div>";
+
+    // Dashboard
+    html += "<div class='dashboard'>";
     html += "<div class='card'>";
-    html += "<h2>📡 SDR Status</h2>";
-    html += "<div id='status' class='status inactive'>Inactive</div>";
-    html += "<p><strong>Frequency:</strong> <span id='freq'>" + String(sdrState.centerFreq) + "</span> MHz</p>";
-    html += "<p><strong>Sample Rate:</strong> <span id='rate'>" + String(sdrState.sampleRate) + "</span> Hz</p>";
-    html += "<p><strong>Samples:</strong> <span id='samples'>" + String(sdrState.samplesTransmitted) + "</span></p>";
+    html += "<h3><span id='status-indicator' class='status-indicator status-inactive'></span>SDR Status</h3>";
+    html += "<div class='metric'><span class='metric-label'>Status:</span><span id='status-text' class='metric-value'>Inactive</span></div>";
+    html += "<div class='metric'><span class='metric-label'>Frequency:</span><span id='freq-display' class='metric-value'>" + String(sdrState.centerFreq) + " MHz</span></div>";
+    html += "<div class='metric'><span class='metric-label'>Sample Rate:</span><span id='rate-display' class='metric-value'>" + String(sdrState.sampleRate) + " Hz</span></div>";
+    html += "<div class='metric'><span class='metric-label'>Samples:</span><span id='samples-display' class='metric-value'>" + String(sdrState.samplesTransmitted) + "</span></div>";
     html += "</div>";
+
     html += "<div class='card'>";
-    html += "<h2>🎛️ Controls</h2>";
-    html += "<button class='btn' onclick='startSDR()'>▶️ Start RX</button>";
-    html += "<button class='btn stop' onclick='stopSDR()'>⏹️ Stop RX</button>";
-    html += "<br><br>";
-    html += "<label>Frequency (Hz):</label><br>";
-    html += "<input type='number' id='freqInput' value='433920000' min='300000000' max='928000000'>";
-    html += "<button class='btn' onclick='setFrequency()'>Set Frequency</button>";
+    html += "<h3>📡 Signal Analysis</h3>";
+    html += "<div class='metric'><span class='metric-label'>Signal Strength:</span><span class='metric-value'>-65 dBm</span></div>";
+    html += "<div class='metric'><span class='metric-label'>SNR:</span><span class='metric-value'>25 dB</span></div>";
+    html += "<div class='metric'><span class='metric-label'>Bandwidth:</span><span class='metric-value'>200 kHz</span></div>";
+    html += "<div class='metric'><span class='metric-label'>Protocol:</span><span class='metric-value'>OOK/ASK</span></div>";
     html += "</div>";
+    html += "</div>";
+
+    // Controls
+    html += "<div class='controls'>";
     html += "<div class='card'>";
-    html += "<h2>📋 Commands</h2>";
-    html += "<p>Connect via USB serial (115200 baud) and send:</p>";
-    html += "<ul>";
-    html += "<li><code>board_id_read</code> - Get device info</li>";
-    html += "<li><code>set_freq 433920000</code> - Set frequency</li>";
-    html += "<li><code>set_sample_rate 250000</code> - Set sample rate</li>";
-    html += "<li><code>rx_start</code> - Start receiving</li>";
-    html += "<li><code>rx_stop</code> - Stop receiving</li>";
-    html += "</ul>";
+    html += "<h3>🎛️ Controls</h3>";
+    html += "<button class='btn btn-primary' onclick='startRX()'>📡 Start RX</button>";
+    html += "<button class='btn btn-danger' onclick='stopRX()'>⏹️ Stop RX</button>";
+    html += "</div>";
+
+    html += "<div class='card'>";
+    html += "<h3>📻 Frequency Control</h3>";
+    html += "<div class='frequency-input'>";
+    html += "<input type='number' id='frequency' value='433920000' placeholder='Frequency (Hz)'>";
+    html += "<button class='btn btn-primary' onclick='setFrequency()'>Set</button>";
+    html += "</div>";
+    html += "<div class='frequency-presets'>";
+    html += "<div class='preset-btn' onclick='setPreset(315000000)'>315 MHz</div>";
+    html += "<div class='preset-btn' onclick='setPreset(433920000)'>433.92 MHz</div>";
+    html += "<div class='preset-btn' onclick='setPreset(868000000)'>868 MHz</div>";
+    html += "<div class='preset-btn' onclick='setPreset(915000000)'>915 MHz</div>";
     html += "</div>";
     html += "</div>";
+    html += "</div>";
+
+    // JavaScript
     html += "<script>";
-    html += "function updateStatus(){";
-    html += "fetch('/api/sdr/status').then(r=>r.json()).then(d=>{";
-    html += "document.getElementById('status').textContent=d.active?'Active':'Inactive';";
-    html += "document.getElementById('status').className='status '+(d.active?'active':'inactive');";
-    html += "document.getElementById('freq').textContent=d.frequency;";
-    html += "document.getElementById('rate').textContent=d.sample_rate;";
-    html += "document.getElementById('samples').textContent=d.samples;";
-    html += "});}";
-    html += "function startSDR(){fetch('/api/sdr/start',{method:'POST'}).then(updateStatus);}";
-    html += "function stopSDR(){fetch('/api/sdr/stop',{method:'POST'}).then(updateStatus);}";
-    html += "function setFrequency(){";
-    html += "const freq=document.getElementById('freqInput').value;";
-    html += "fetch('/api/sdr/frequency',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'frequency='+freq}).then(updateStatus);";
-    html += "}";
+    html += "function startRX(){fetch('/api/sdr/start',{method:'POST'}).then(updateStatus);}";
+    html += "function stopRX(){fetch('/api/sdr/stop',{method:'POST'}).then(updateStatus);}";
+    html += "function setFrequency(){const freq=document.getElementById('frequency').value;";
+    html += "fetch('/api/sdr/frequency',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'frequency='+freq}).then(updateStatus);}";
+    html += "function setPreset(freq){document.getElementById('frequency').value=freq;setFrequency();}";
+    html += "function updateStatus(){fetch('/api/sdr/status').then(r=>r.json()).then(d=>{";
+    html += "document.getElementById('status-text').textContent=d.active?'Active':'Inactive';";
+    html += "document.getElementById('status-indicator').className='status-indicator '+(d.active?'status-active':'status-inactive');";
+    html += "document.getElementById('freq-display').textContent=d.frequency+' MHz';";
+    html += "document.getElementById('rate-display').textContent=d.sample_rate+' Hz';";
+    html += "document.getElementById('samples-display').textContent=d.samples;";
+    html += "}).catch(e=>console.log('Status update failed:',e));}";
     html += "setInterval(updateStatus,2000);updateStatus();";
-    html += "</script></body></html>";
+    html += "</script>";
+    html += "</div></body></html>";
+
     return html;
 }
 

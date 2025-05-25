@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvilCrow SDR Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #888;
+            font-size: 1.1em;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .card h3 {
+            color: #00ff88;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-active {
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .status-inactive {
+            background: #ff4444;
+            box-shadow: 0 0 10px #ff4444;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .metric-label {
+            color: #ccc;
+        }
+
+        .metric-value {
+            color: #00ccff;
+            font-weight: bold;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff4444, #ff6b6b);
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 68, 68, 0.4);
+        }
+
+        .frequency-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .frequency-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .frequency-input input:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        .frequency-presets {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .preset-btn {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .preset-btn:hover {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+
+        .spectrum-display {
+            grid-column: 1 / -1;
+            height: 300px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spectrum-canvas {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                rgba(0, 255, 136, 0.1) 0%,
+                rgba(0, 204, 255, 0.1) 50%,
+                rgba(0, 0, 0, 0.8) 100%);
+        }
+
+        .command-terminal {
+            grid-column: 1 / -1;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .terminal-header {
+            color: #00ff88;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .command-list {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .command {
+            color: #00ccff;
+            margin-bottom: 5px;
+        }
+
+        .command-desc {
+            color: #888;
+            margin-left: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .frequency-presets {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🦅 EvilCrow SDR Pro</h1>
+            <p class="subtitle">Professional RF Security Platform | Software Defined Radio</p>
+        </div>
+
+        <div class="dashboard">
+            <div class="card">
+                <h3><span class="status-indicator status-active"></span>SDR Status</h3>
+                <div class="metric">
+                    <span class="metric-label">Status:</span>
+                    <span class="metric-value">Active</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Frequency:</span>
+                    <span class="metric-value">433.92 MHz</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Sample Rate:</span>
+                    <span class="metric-value">250000 Hz</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Samples:</span>
+                    <span class="metric-value">11760</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📡 Signal Analysis</h3>
+                <div class="metric">
+                    <span class="metric-label">Signal Strength:</span>
+                    <span class="metric-value">-65 dBm</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">SNR:</span>
+                    <span class="metric-value">25 dB</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Bandwidth:</span>
+                    <span class="metric-value">200 kHz</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Protocol:</span>
+                    <span class="metric-value">OOK/ASK</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="card">
+                <h3>🎛️ Controls</h3>
+                <button class="btn btn-primary" onclick="startRX()">📡 Start RX</button>
+                <button class="btn btn-danger" onclick="stopRX()">⏹️ Stop RX</button>
+            </div>
+
+            <div class="card">
+                <h3>📻 Frequency Control</h3>
+                <div class="frequency-input">
+                    <input type="number" id="frequency" value="433920000" placeholder="Frequency (Hz)">
+                    <button class="btn btn-primary" onclick="setFrequency()">Set</button>
+                </div>
+                <div class="frequency-presets">
+                    <div class="preset-btn" onclick="setPreset(315000000)">315 MHz</div>
+                    <div class="preset-btn" onclick="setPreset(433920000)">433.92 MHz</div>
+                    <div class="preset-btn" onclick="setPreset(868000000)">868 MHz</div>
+                    <div class="preset-btn" onclick="setPreset(915000000)">915 MHz</div>
+                </div>
+            </div>
+
+            <div class="spectrum-display">
+                <div class="spectrum-canvas" id="spectrum">
+                    <canvas id="spectrumCanvas" width="800" height="300"></canvas>
+                </div>
+            </div>
+
+            <div class="command-terminal">
+                <div class="terminal-header">📟 Command Reference</div>
+                <div class="command-list">
+                    <div class="command">board_id_read</div>
+                    <div class="command-desc">Get device information</div>
+                    
+                    <div class="command">set_freq 433920000</div>
+                    <div class="command-desc">Set frequency in Hz</div>
+                    
+                    <div class="command">set_sample_rate 250000</div>
+                    <div class="command-desc">Set sample rate in Hz</div>
+                    
+                    <div class="command">rx_start</div>
+                    <div class="command-desc">Start receiving</div>
+                    
+                    <div class="command">rx_stop</div>
+                    <div class="command-desc">Stop receiving</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startRX() {
+            fetch('/api/sdr/start', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => console.log('RX Started:', data));
+        }
+
+        function stopRX() {
+            fetch('/api/sdr/stop', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => console.log('RX Stopped:', data));
+        }
+
+        function setFrequency() {
+            const freq = document.getElementById('frequency').value;
+            fetch('/api/sdr/frequency', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ frequency: freq })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Frequency set:', data));
+        }
+
+        function setPreset(freq) {
+            document.getElementById('frequency').value = freq;
+            setFrequency();
+        }
+
+        // Simulate spectrum display
+        function drawSpectrum() {
+            const canvas = document.getElementById('spectrumCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw spectrum
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            for (let x = 0; x < canvas.width; x += 2) {
+                const y = canvas.height - (Math.random() * 100 + Math.sin(x * 0.01) * 50 + 50);
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            
+            ctx.stroke();
+        }
+
+        // Update spectrum every 100ms
+        setInterval(drawSpectrum, 100);
+        
+        // Initial draw
+        drawSpectrum();
+    </script>
+</body>
+</html>
