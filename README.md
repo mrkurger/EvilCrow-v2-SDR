@@ -1,7 +1,22 @@
-# EvilCrow RF v2 - Working USB SDR Implementation
+# EvilCrow RF v2 - Enhanced SDR Implementation
 
+**🔗 Based on the original [EvilCrow RF v2](https://github.com/joelsernamoreno/EvilCrowRF-V2) by Joel Serna Moreno**
 
-## ✅ **Features**
+This enhanced firmware transforms your EvilCrow RF v2 into a powerful Software Defined Radio (SDR) compatible with Universal Radio Hacker (URH) and other professional RF analysis tools.
+
+## 🙏 Attribution & Credits
+
+This project builds upon the excellent work of:
+
+- **Joel Serna Moreno** - Original EvilCrow RF v2 creator
+- **Original Repository**: https://github.com/joelsernamoreno/EvilCrowRF-V2
+- **Hardware Design**: EvilCrow RF v2 by Joel Serna Moreno
+
+## 🔄 Contributing Back
+
+Improvements and features developed here are intended to be contributed back to the original EvilCrow project via pull requests to help the entire community.
+
+## ✅ **Enhanced Features**
 
 - **Proper CC1101 library integration** - Uses ELECHOUSE_CC1101_SRC_DRV.h
 - **USB SDR functionality** - HackRF protocol compatibility
@@ -144,5 +159,3 @@
 3. **Real Data**: Reads actual RF data from CC1101 FIFO
 4. **Stable Communication**: Proper SPI handling and timing
 5. **Hardware Compatibility**: Works with actual EvilCrow hardware
-
-
