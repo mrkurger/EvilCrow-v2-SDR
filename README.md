@@ -21,7 +21,7 @@ Improvements and features developed here are intended to be contributed back to 
 **Would you rather pay cose to 500$ for the HackRF, instead of paying just 35~$ for the Evil Crow v2?**
 
 This firmware transforms you Evil Crow Device in to a multifunctional, sub-Ghz, wireless security auditing tool.
-If you have no need for > 1GHz band access you stand to save a few hundred dollars while getting extremely high value for your money if you choose Evil Crow v2 + SDR firmware over, say, the Hack RF One which will cost you about 10x more.
+If you have no need for >1GHz band access you stand to save a few hundred dollars while getting extremely high value for your money if you choose Evil Crow v2 + SDR firmware over, say, the Hack RF One which will cost you about 10x more.
 
 
 ## ✅ **Enhanced Features**
